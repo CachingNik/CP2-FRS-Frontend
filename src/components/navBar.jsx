@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
+import "bootstrap/js/src/collapse";
 
 const NavBar = () => {
   return (
@@ -8,7 +9,7 @@ const NavBar = () => {
         FRS
       </Link>
       <button
-        className="navbar-toggler"
+        className="navbar-toggler collapsed"
         type="button"
         data-toggle="collapse"
         data-target="#navbarNavAltMarkup"
@@ -22,6 +23,12 @@ const NavBar = () => {
         <div className="navbar-nav">
           <NavLink className="nav-link" to="/flights">
             Flights
+          </NavLink>
+          <NavLink className="nav-link" to="/login">
+            Login
+          </NavLink>
+          <NavLink className="nav-link" to="/register">
+            Register
           </NavLink>
         </div>
       </div>

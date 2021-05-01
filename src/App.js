@@ -1,24 +1,28 @@
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "./App.css";
-import Home from "./components/Home";
-import NavBar from "./components/NavBar";
-import NotFound from "./components/NotFound";
-import Flights from "./components/Flights";
+import Home from "./components/home";
+import NavBar from "./components/navBar";
+import NotFound from "./components/notFound";
+import Flights from "./components/flights";
+import LoginForm from "./components/loginFom";
+import RegisterForm from "./components/RegisterForm";
 
 class App extends Component {
   render() {
     return (
       <div>
         <NavBar />
-        <div className="content">
+        <main className="container">
           <Switch>
             <Route path="/flights" component={Flights} />
+            <Route path="/login" component={LoginForm} />
+            <Route path="/register" component={RegisterForm} />
             <Route path="/not-found" component={NotFound} />
             <Route path="/" exact component={Home} />
             <Redirect to="/not-found" />
           </Switch>
-        </div>
+        </main>
       </div>
     );
   }
