@@ -6,7 +6,7 @@ import NavBar from "./components/navBar";
 import NotFound from "./components/notFound";
 import Flights from "./components/flights";
 import LoginForm from "./components/loginFom";
-import RegisterForm from "./components/RegisterForm";
+import RegisterForm from "./components/registerForm";
 
 class App extends Component {
   render() {

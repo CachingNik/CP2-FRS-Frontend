@@ -1,7 +1,6 @@
 import { Component } from "react";
 import Joi from "joi-browser";
 import Input from "./input";
-import ToggleButton from "./toggleButton";
 
 class Form extends Component {
   validate = () => {
@@ -44,14 +43,6 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
-  handleMode = ({ currentTarget: button }) => {
-    const activeMode = { ...this.state.activeMode };
-    Object.keys(activeMode).forEach((key) => {
-      activeMode[key] = key === button.name;
-    });
-    this.setState({ activeMode });
-  };
-
   renderSubmitButton(label) {
     return (
       <button disabled={this.validate()} className="btn btn-primary">
@@ -71,19 +62,6 @@ class Form extends Component {
         onChange={this.handleChange}
         value={data[name]}
         error={errors[name]}
-      />
-    );
-  };
-
-  renderToggleButton = (name, label) => {
-    const { activeMode } = this.state;
-
-    return (
-      <ToggleButton
-        mode={activeMode[name]}
-        label={label}
-        name={name}
-        onClick={this.handleMode}
       />
     );
   };

@@ -6,3 +6,4 @@ This project is being developed using Node.js & React.
 
 1. Routing
 2. Login & Register Pages with error checking
+3. Flight Search Form Implemented (validation & dropdown list still remaining)

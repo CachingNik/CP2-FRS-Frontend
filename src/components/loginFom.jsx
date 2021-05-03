@@ -22,11 +22,15 @@ class LoginForm extends Form {
     return (
       <div>
         <h1>Login</h1>
-        <form onSubmit={this.handleSubmit}>
-          {this.renderInput("username", "Username")}
-          {this.renderInput("password", "Password", "password")}
-          {this.renderSubmitButton("Login")}
-        </form>
+        <div className="form-row justify-content-center">
+          <div className="col-md-5">
+            <form onSubmit={this.handleSubmit}>
+              {this.renderInput("username", "Username")}
+              {this.renderInput("password", "Password", "password")}
+              {this.renderSubmitButton("Login")}
+            </form>
+          </div>
+        </div>
       </div>
     );
   }
