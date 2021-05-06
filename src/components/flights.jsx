@@ -1,86 +1,57 @@
-import React from "react";
-import TravelForm from "./common/travelForm";
-import Dropdown from "./common/dropdown";
+import React, { Component } from "react";
+import Table from "./common/table";
 
-class Flights extends TravelForm {
+class Flights extends Component {
+  flights = [
+    {
+      _id: 1,
+      airline: { name: "Indigo", id: "SG 589" },
+      time: { departure: "13:00", arrival: "17:00" },
+      location: { from: "DEL", to: "BLR" },
+      price: 5899,
+    },
+    {
+      _id: 2,
+      airline: { name: "Air India", id: "FG 589" },
+      time: { departure: "8:00", arrival: "12:00" },
+      location: { from: "DEL", to: "BLR" },
+      price: 6099,
+    },
+    {
+      _id: 3,
+      airline: { name: "Indigo", id: "SG 289" },
+      time: { departure: "9:00", arrival: "13:00" },
+      location: { from: "DEL", to: "BLR" },
+      price: 5899,
+    },
+    {
+      _id: 4,
+      airline: { name: "Air Asia", id: "EY 589" },
+      time: { departure: "14:00", arrival: "17:30" },
+      location: { from: "DEL", to: "BLR" },
+      price: 6599,
+    },
+  ];
+
   state = {
-    activeMode: {
-      oneWay: true,
-      roundTrip: false,
-    },
-    counter: {
-      adult: 0,
-      child: 0,
-      infant: 0,
-    },
-    travelDate: {
-      dep: "",
-      ret: "",
-    },
-  };
-
-  componentDidMount() {
-    const travelDate = { ...this.state.travelDate };
-
-    let date = new Date();
-    travelDate.dep = this.getDatePickerFormat(date);
-    date.setDate(date.getDate() + 1);
-    travelDate.ret = this.getDatePickerFormat(date);
-
-    this.setState({ travelDate });
-  }
-
-  getDatePickerFormat(date) {
-    return date.toISOString().substr(0, 10);
-  }
-
-  doSearch = () => {
-    // Call the Server
-    console.log("Searching...");
+    flights: this.flights,
   };
 
   render() {
-    const { roundTrip } = this.state.activeMode;
+    const { flights } = this.state;
 
     return (
-      <div>
+      <React.Fragment>
         <h1>Flights</h1>
-        <div className="btn-group btn-group-toggle">
-          {this.renderToggleButton("oneWay", "One Way")}
-          {this.renderToggleButton("roundTrip", "Round Trip")}
-        </div>
-        <form className="my-2" onSubmit={this.handleSearch}>
-          <div className="card bg-light">
-            <div className="card-header">Book your Seats Now!</div>
-            <div className="card-body">
-              <div className="form-row my-3">
-                <div className="input-group col-12 col-lg-6 my-1">
-                  <Dropdown label="From" />
-                  <Dropdown label="To" />
-                  <Dropdown label="Class" />
-                </div>
-                <div className="input-group col-12 col-lg-6 my-1">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">
-                      {roundTrip ? "Departure / Return" : "Departure"}
-                    </span>
-                  </div>
-                  {this.renderInputDate("dep")}
-                  {roundTrip && this.renderInputDate("ret")}
-                </div>
-              </div>
-              <div className="form-row justify-content-around">
-                {this.renderPassengerCounter("adult", "Adults")}
-                {this.renderPassengerCounter("child", "Children")}
-                {this.renderPassengerCounter("infant", "Infants")}
-              </div>
-            </div>
-          </div>
-          {this.renderSearchButton("Search")}
-        </form>
-      </div>
+        <Table flights={flights} />
+        <span className="badge badge-primary">
+          <span className="badge badge-light">{flights.length}</span> matching
+          packages were found
+        </span>
+      </React.Fragment>
     );
   }
 }
 
 export default Flights;
+<h1>Flights</h1>;

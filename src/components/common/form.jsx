@@ -1,6 +1,9 @@
 import { Component } from "react";
+import { Link } from "react-router-dom";
 import Joi from "joi-browser";
 import Input from "./input";
+import Counter from "./counter";
+import InputDate from "./inputDate";
 
 class Form extends Component {
   validate = () => {
@@ -43,6 +46,42 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
+  handleDateChange = ({ currentTarget: datePicker }) => {
+    const departureDate = datePicker.value;
+
+    this.setState({ departureDate });
+  };
+
+  handleCounterIncrement = (e) => {
+    e.preventDefault();
+
+    const counterName = e.currentTarget.name;
+    const counter = { ...this.state.counter };
+
+    if (counter[counterName] === 4) return;
+
+    counter[counterName] += 1;
+    this.setState({ counter });
+  };
+
+  handleCounterDecrement = (e) => {
+    e.preventDefault();
+
+    const counterName = e.currentTarget.name;
+    const counter = { ...this.state.counter };
+
+    if (counter[counterName] === 0) return;
+
+    counter[counterName] -= 1;
+    this.setState({ counter });
+  };
+
+  handleSearch = (e) => {
+    e.preventDefault();
+
+    this.doSearch();
+  };
+
   renderSubmitButton(label) {
     return (
       <button disabled={this.validate()} className="btn btn-primary">
@@ -63,6 +102,42 @@ class Form extends Component {
         value={data[name]}
         error={errors[name]}
       />
+    );
+  };
+
+  renderInputDate = (name) => {
+    const { departureDate } = this.state;
+
+    return (
+      <InputDate
+        value={departureDate}
+        name={name}
+        onChange={this.handleDateChange}
+      />
+    );
+  };
+
+  renderPassengerCounter = (name, label) => {
+    const { counter } = this.state;
+
+    return (
+      <Counter
+        label={label}
+        value={counter[name]}
+        name={name}
+        onDecrement={this.handleCounterDecrement}
+        onIncrement={this.handleCounterIncrement}
+      />
+    );
+  };
+
+  renderSearchButton = (label) => {
+    return (
+      <div className="text-center my-2">
+        <Link to={`/flights/${this.state.departureDate}`}>
+          <button className="btn btn-primary">{label}</button>
+        </Link>
+      </div>
     );
   };
 }

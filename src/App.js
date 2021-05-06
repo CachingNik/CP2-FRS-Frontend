@@ -11,11 +11,11 @@ import RegisterForm from "./components/registerForm";
 class App extends Component {
   render() {
     return (
-      <div>
+      <React.Fragment>
         <NavBar />
         <main className="container">
           <Switch>
-            <Route path="/flights" component={Flights} />
+            <Route path="/flights/:date?" component={Flights} />
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
             <Route path="/not-found" component={NotFound} />
@@ -23,7 +23,7 @@ class App extends Component {
             <Redirect to="/not-found" />
           </Switch>
         </main>
-      </div>
+      </React.Fragment>
     );
   }
 }

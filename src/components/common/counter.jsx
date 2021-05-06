@@ -1,6 +1,6 @@
 import React from "react";
 
-const PassengerCounter = ({ label, value, name, onIncrement, onDecrement }) => {
+const Counter = ({ label, value, name, onIncrement, onDecrement }) => {
   return (
     <div className="input-group col-sm-6 col-lg-3 my-1 justify-content-center">
       <div className="input-group-prepend">
@@ -22,4 +22,4 @@ const PassengerCounter = ({ label, value, name, onIncrement, onDecrement }) => {
   );
 };
 
-export default PassengerCounter;
+export default Counter;
