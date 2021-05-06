@@ -54,4 +54,3 @@ class Flights extends Component {
 }
 
 export default Flights;
-<h1>Flights</h1>;
