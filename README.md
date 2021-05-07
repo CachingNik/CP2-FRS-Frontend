@@ -1,6 +1,7 @@
-# Flight Reservation Sytem
+# Flight Reservation Sytem (Frontend)
 
-This project is being developed using Node.js & React.
+This project is being developed using React library.
+[Click here to view the backend repository](https://github.com/CachingNik/CP2-FRS-Backend)
 
 ## Tasks Completed
 
