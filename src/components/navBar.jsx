@@ -6,7 +6,7 @@ const NavBar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link className="navbar-brand" to="/">
-        FRS
+        <i className="icon-plane mr-1"></i>FRS
       </Link>
       <button
         className="navbar-toggler collapsed"

@@ -1,5 +1,5 @@
 import React from "react";
-import Frs1 from "../custom/frs1";
+import Frs1 from "./custom/frs1";
 
 const TableBody = ({ flights }) => {
   return (
@@ -17,7 +17,7 @@ const TableBody = ({ flights }) => {
                 <i className="icon-map-marker mr-1"></i>
                 {flight.location.from}
               </Frs1>
-              <i className="icon-plane m-3"></i>
+              <i className="icon-time m-3 icon-large"></i>
               <Frs1 text={flight.time.arrival} color="dark">
                 <i className="icon-map-marker mr-1"></i>
                 {flight.location.to}
