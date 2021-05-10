@@ -1,6 +1,7 @@
 import React from "react";
+import { ToastContainer } from "react-toastify";
+import http from "../services/httpService";
 import Form from "./common/form";
-import Dropdown from "./common/dropdown";
 
 class FlightSearch extends Form {
   state = {
@@ -9,14 +10,25 @@ class FlightSearch extends Form {
       child: 0,
       infant: 0,
     },
+    dropdown: {
+      from: "",
+      to: "",
+      class: "",
+    },
     departureDate: "",
+    airports: [],
+    classes: [],
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     let date = new Date();
     const departureDate = date.toISOString().substr(0, 10);
 
-    this.setState({ departureDate });
+    const { data: airports } = await http.get(
+      "http://localhost:3000/api/airports"
+    );
+
+    this.setState({ departureDate, airports });
   }
 
   doSearch = () => {
@@ -25,33 +37,40 @@ class FlightSearch extends Form {
   };
 
   render() {
+    const { airports, classes } = this.state;
+
     return (
-      <form className="my-2" onSubmit={this.handleSearch}>
-        <div className="card bg-light">
-          <div className="card-header">Book your Seats Now!</div>
-          <div className="card-body">
-            <div className="form-row my-3">
-              <div className="input-group col-12 col-lg-6 my-1">
-                <Dropdown label="From" />
-                <Dropdown label="To" />
-                <Dropdown label="Class" />
-              </div>
-              <div className="input-group col-12 col-lg-6 my-1">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">Departure</span>
+      <React.Fragment>
+        <ToastContainer />
+        <form className="my-2" onSubmit={this.handleSearch}>
+          <div className="card bg-light">
+            <div className="card-header">Book your Seats Now!</div>
+            <div className="card-body">
+              <div className="form-row my-3">
+                <div className="input-group">
+                  {this.renderDropdown("from", "From", airports)}
+                  {this.renderDropdown("to", "To", airports)}
+                  {this.renderDropdown("class", "Class", classes)}
                 </div>
-                {this.renderInputDate("departureDate")}
               </div>
-            </div>
-            <div className="form-row justify-content-around">
-              {this.renderPassengerCounter("adult", "Adults")}
-              {this.renderPassengerCounter("child", "Children")}
-              {this.renderPassengerCounter("infant", "Infants")}
+              <div className="form-row my-3">
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">Departure</span>
+                  </div>
+                  {this.renderInputDate("departureDate")}
+                </div>
+              </div>
+              <div className="form-row justify-content-around">
+                {this.renderCounter("adult", "Adults")}
+                {this.renderCounter("child", "Children")}
+                {this.renderCounter("infant", "Infants")}
+              </div>
             </div>
           </div>
-        </div>
-        {this.renderSearchButton("Search")}
-      </form>
+          {this.renderSearchButton("Search")}
+        </form>
+      </React.Fragment>
     );
   }
 }

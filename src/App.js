@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import "./App.css";
 import Home from "./components/home";
 import NavBar from "./components/navBar";
 import NotFound from "./components/notFound";
 import Flights from "./components/flights";
 import LoginForm from "./components/loginFom";
 import RegisterForm from "./components/registerForm";
+import "./App.css";
 
 class App extends Component {
   render() {

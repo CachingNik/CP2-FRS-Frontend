@@ -4,6 +4,7 @@ import Joi from "joi-browser";
 import Input from "./input";
 import Counter from "./counter";
 import InputDate from "./inputDate";
+import Dropdown from "./dropdown";
 
 class Form extends Component {
   validate = () => {
@@ -46,6 +47,13 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
+  handleDropdown = ({ currentTarget }) => {
+    const dropdown = { ...this.state.dropdown };
+    dropdown[currentTarget.name] = currentTarget.value;
+
+    this.setState({ dropdown });
+  };
+
   handleDateChange = ({ currentTarget: datePicker }) => {
     const departureDate = datePicker.value;
 
@@ -77,8 +85,6 @@ class Form extends Component {
   };
 
   handleSearch = (e) => {
-    e.preventDefault();
-
     this.doSearch();
   };
 
@@ -117,7 +123,7 @@ class Form extends Component {
     );
   };
 
-  renderPassengerCounter = (name, label) => {
+  renderCounter = (name, label) => {
     const { counter } = this.state;
 
     return (
@@ -134,10 +140,24 @@ class Form extends Component {
   renderSearchButton = (label) => {
     return (
       <div className="text-center my-2">
-        <Link to={`/flights/${this.state.departureDate}`}>
+        <Link to={"/flights"}>
           <button className="btn btn-primary">{label}</button>
         </Link>
       </div>
+    );
+  };
+
+  renderDropdown = (name, label, items) => {
+    const { dropdown } = this.state;
+
+    return (
+      <Dropdown
+        label={label}
+        items={items}
+        onSelect={this.handleDropdown}
+        value={dropdown[name]}
+        name={name}
+      />
     );
   };
 }
