@@ -1,11 +1,11 @@
 import React from "react";
 import FlightSearch from "./flightSearch";
 
-const Home = () => {
+const Home = ({ history }) => {
   return (
     <React.Fragment>
       <h1>Home</h1>
-      <FlightSearch />
+      <FlightSearch history={history} />
     </React.Fragment>
   );
 };

@@ -15,7 +15,10 @@ class App extends Component {
         <NavBar />
         <main className="container">
           <Switch>
-            <Route path="/flights/:date?" component={Flights} />
+            <Route
+              path="/flights/:fromId/:toId/:serviceClass/:departure"
+              component={Flights}
+            />
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
             <Route path="/not-found" component={NotFound} />

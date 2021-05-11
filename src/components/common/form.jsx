@@ -1,5 +1,4 @@
 import { Component } from "react";
-import { Link } from "react-router-dom";
 import Joi from "joi-browser";
 import Input from "./input";
 import Counter from "./counter";
@@ -55,9 +54,9 @@ class Form extends Component {
   };
 
   handleDateChange = ({ currentTarget: datePicker }) => {
-    const departureDate = datePicker.value;
+    const departure = datePicker.value;
 
-    this.setState({ departureDate });
+    this.setState({ departure });
   };
 
   handleCounterIncrement = (e) => {
@@ -84,10 +83,6 @@ class Form extends Component {
     this.setState({ counter });
   };
 
-  handleSearch = (e) => {
-    this.doSearch();
-  };
-
   renderSubmitButton(label) {
     return (
       <button disabled={this.validate()} className="btn btn-primary">
@@ -112,11 +107,11 @@ class Form extends Component {
   };
 
   renderInputDate = (name) => {
-    const { departureDate } = this.state;
+    const { departure } = this.state;
 
     return (
       <InputDate
-        value={departureDate}
+        value={departure}
         name={name}
         onChange={this.handleDateChange}
       />
@@ -134,16 +129,6 @@ class Form extends Component {
         onDecrement={this.handleCounterDecrement}
         onIncrement={this.handleCounterIncrement}
       />
-    );
-  };
-
-  renderSearchButton = (label) => {
-    return (
-      <div className="text-center my-2">
-        <Link to={"/flights"}>
-          <button className="btn btn-primary">{label}</button>
-        </Link>
-      </div>
     );
   };
 
