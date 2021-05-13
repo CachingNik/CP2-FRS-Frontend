@@ -2,7 +2,6 @@ import { Component } from "react";
 import Joi from "joi-browser";
 import Input from "./input";
 import Counter from "./counter";
-import InputDate from "./inputDate";
 import Dropdown from "./dropdown";
 
 class Form extends Component {
@@ -46,48 +45,39 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
-  handleDropdown = ({ currentTarget }) => {
-    const dropdown = { ...this.state.dropdown };
-    dropdown[currentTarget.name] = currentTarget.value;
-
-    this.setState({ dropdown });
-  };
-
-  handleDateChange = ({ currentTarget: datePicker }) => {
-    const departure = datePicker.value;
-
-    this.setState({ departure });
-  };
-
-  handleCounterIncrement = (e) => {
+  handleIncrement = (e) => {
     e.preventDefault();
 
-    const counterName = e.currentTarget.name;
+    const { name, attributes } = e.currentTarget;
+    const maxValue = parseInt(attributes["max"].value);
     const counter = { ...this.state.counter };
 
-    if (counter[counterName] === 4) return;
+    if (counter[name] === maxValue) return;
 
-    counter[counterName] += 1;
+    counter[name] += 1;
     this.setState({ counter });
   };
 
-  handleCounterDecrement = (e) => {
+  handleDecrement = (e) => {
     e.preventDefault();
 
-    const counterName = e.currentTarget.name;
+    const { name, attributes } = e.currentTarget;
+    const minValue = parseInt(attributes["min"].value);
     const counter = { ...this.state.counter };
 
-    if (counter[counterName] === 0) return;
+    if (counter[name] === minValue) return;
 
-    counter[counterName] -= 1;
+    counter[name] -= 1;
     this.setState({ counter });
   };
 
   renderSubmitButton(label) {
     return (
-      <button disabled={this.validate()} className="btn btn-primary">
-        {label}
-      </button>
+      <div className="text-center mt-3">
+        <button disabled={this.validate()} className="btn btn-primary">
+          {label}
+        </button>
+      </div>
     );
   }
 
@@ -106,19 +96,7 @@ class Form extends Component {
     );
   };
 
-  renderInputDate = (name) => {
-    const { departure } = this.state;
-
-    return (
-      <InputDate
-        value={departure}
-        name={name}
-        onChange={this.handleDateChange}
-      />
-    );
-  };
-
-  renderCounter = (name, label) => {
+  renderCounter = (name, label, min = 0, max = 4) => {
     const { counter } = this.state;
 
     return (
@@ -126,22 +104,24 @@ class Form extends Component {
         label={label}
         value={counter[name]}
         name={name}
-        onDecrement={this.handleCounterDecrement}
-        onIncrement={this.handleCounterIncrement}
+        min={min}
+        max={max}
+        onDecrement={this.handleDecrement}
+        onIncrement={this.handleIncrement}
       />
     );
   };
 
   renderDropdown = (name, label, items) => {
-    const { dropdown } = this.state;
+    const { data } = this.state;
 
     return (
       <Dropdown
         label={label}
         items={items}
-        onSelect={this.handleDropdown}
-        value={dropdown[name]}
         name={name}
+        value={data[name]}
+        onChange={this.handleChange}
       />
     );
   };

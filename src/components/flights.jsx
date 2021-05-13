@@ -1,40 +1,87 @@
 import React, { Component } from "react";
-import { ToastContainer } from "react-toastify";
-import http from "../services/httpService";
-import Table from "./common/table";
+import { getAirplanes, getFlights } from "../services/packageService";
+import { paginate } from "../utils/paginate";
+import FlightForm from "./flightForm";
+import FlightTable from "./flightTable";
+import Pagination from "./common/pagination";
+import ListGroup from "./common/listGroup";
 
 class Flights extends Component {
   state = {
+    search: false,
     flights: [],
+    airplanes: [],
+    serviceClass: "",
+    pageSize: 1,
+    currentPage: 1,
+    selectedAirplane: "All Airplanes",
   };
 
-  async componentDidMount() {
-    const { fromId, toId, departure } = this.props.match.params;
+  handleSearch = async (fromId, toId, serviceClass, departureDate) => {
+    const { data: flights } = await getFlights(fromId, toId, departureDate);
+    const { data } = await getAirplanes(fromId, toId, departureDate);
+    const airplanes = ["All Airplanes", ...data];
 
-    try {
-      const { data: flights } = await http.get(
-        `http://192.168.1.3:3000/api/packages/${fromId}/${toId}/${departure}`
-      );
+    this.setState({ flights, airplanes, serviceClass, search: true });
+  };
 
-      this.setState({ flights });
-    } catch (ex) {
-      console.error(ex);
-    }
-  }
+  handlePageChange = (page) => {
+    this.setState({ currentPage: page });
+  };
+
+  handleAirplaneSelect = (airplane) => {
+    this.setState({ selectedAirplane: airplane, currentPage: 1 });
+  };
 
   render() {
-    const { flights } = this.state;
-    const { serviceClass } = this.props.match.params;
+    const {
+      search,
+      flights: allFlights,
+      airplanes,
+      serviceClass,
+      currentPage,
+      pageSize,
+      selectedAirplane,
+    } = this.state;
+
+    const filteredFlights =
+      selectedAirplane !== "All Airplanes"
+        ? allFlights.filter((f) => f.airplane.name === selectedAirplane)
+        : allFlights;
+
+    const flights = paginate(filteredFlights, currentPage, pageSize);
 
     return (
       <React.Fragment>
-        <ToastContainer />
         <h1>Flights</h1>
-        <Table flights={flights} serviceClass={serviceClass} />
-        <span className="badge badge-primary">
-          <span className="badge badge-light">{flights.length}</span> matching
-          packages were found
-        </span>
+        <FlightForm doSearch={this.handleSearch} />
+        {search && (
+          <div className="row my-3">
+            <h3>
+              <span className="badge bg-dark">Search Results:</span>
+            </h3>
+            <div className="col col-md-3 col-xl-2">
+              <ListGroup
+                items={airplanes}
+                selectedItem={selectedAirplane}
+                onItemSelect={this.handleAirplaneSelect}
+              />
+            </div>
+            <div className="col">
+              <FlightTable
+                flightsCount={filteredFlights.length}
+                flights={flights}
+                serviceClass={serviceClass}
+              />
+              <Pagination
+                itemsCount={filteredFlights.length}
+                pageSize={pageSize}
+                currentPage={currentPage}
+                onPageChange={this.handlePageChange}
+              />
+            </div>
+          </div>
+        )}
       </React.Fragment>
     );
   }

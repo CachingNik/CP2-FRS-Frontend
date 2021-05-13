@@ -1,13 +1,13 @@
 import React from "react";
 
-const Dropdown = ({ label, items, onSelect, ...rest }) => {
+const Dropdown = ({ label, items, ...rest }) => {
   return (
-    <select className="custom-select" onChange={onSelect} {...rest}>
+    <select className="form-select" {...rest}>
       <option value="" disabled>
         {label}
       </option>
       {items.map((item) => (
-        <option value={item._id} key={item._id}>
+        <option key={item._id} value={item._id}>
           {item.name}
         </option>
       ))}

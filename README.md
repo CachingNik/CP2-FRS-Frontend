@@ -7,5 +7,5 @@ This project is being developed using React library.
 
 1. Routing
 2. Login & Register Pages with error checking
-3. Flight Search Form Implemented (validation remaining)
+3. Flight Search Form Implemented
 4. Flights / Packages list (Table)

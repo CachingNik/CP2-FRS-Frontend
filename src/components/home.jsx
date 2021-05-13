@@ -1,13 +1,10 @@
-import React from "react";
-import FlightSearch from "./flightSearch";
+import React, { Component } from "react";
 
-const Home = ({ history }) => {
-  return (
-    <React.Fragment>
-      <h1>Home</h1>
-      <FlightSearch history={history} />
-    </React.Fragment>
-  );
-};
+class Home extends Component {
+  state = {};
+  render() {
+    return <h1>Home</h1>;
+  }
+}
 
 export default Home;

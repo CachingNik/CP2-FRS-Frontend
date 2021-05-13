@@ -2,8 +2,8 @@ import React from "react";
 
 const Input = ({ name, label, error, ...rest }) => {
   return (
-    <div className="form-group">
-      <label htmlFor={name}>{label}</label>
+    <div className="input-group mb-3">
+      <span className="input-group-text">{label}</span>
       <input
         {...rest}
         name={name}
