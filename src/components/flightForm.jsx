@@ -1,7 +1,7 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-import { getAirports } from "../services/airportService";
+import { getAirports, getServiceClasses } from "../services/otherService";
 
 class FlightForm extends Form {
   state = {
@@ -18,24 +18,21 @@ class FlightForm extends Form {
     },
     errors: {},
     airports: [],
-    serviceClasses: [
-      { _id: "economy", name: "Economy" },
-      { _id: "business", name: "Business" },
-      { _id: "first", name: "First" },
-    ],
+    serviceClasses: [],
   };
 
   schema = {
     departure: Joi.date().required().label("Departure"),
     from: Joi.string().required(),
-    to: Joi.string().required(),
+    to: Joi.string().disallow(Joi.ref("from")).required(),
     serviceClass: Joi.string().required(),
   };
 
   async componentDidMount() {
     const { data: airports } = await getAirports();
+    const { data: serviceClasses } = await getServiceClasses();
 
-    this.setState({ airports });
+    this.setState({ airports, serviceClasses });
   }
 
   doSubmit = () => {

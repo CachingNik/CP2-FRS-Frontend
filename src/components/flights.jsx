@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { ToastContainer } from "react-toastify";
+import _ from "lodash";
 import { getAirplanes, getFlights } from "../services/packageService";
 import { paginate } from "../utils/paginate";
 import FlightForm from "./flightForm";
@@ -11,18 +13,26 @@ class Flights extends Component {
     search: false,
     flights: [],
     airplanes: [],
-    serviceClass: "",
-    pageSize: 1,
+    pageSize: 5,
     currentPage: 1,
     selectedAirplane: "All Airplanes",
+    sortColumn: {
+      path: "airplane.name",
+      order: "asc",
+    },
   };
 
-  handleSearch = async (fromId, toId, serviceClass, departureDate) => {
-    const { data: flights } = await getFlights(fromId, toId, departureDate);
-    const { data } = await getAirplanes(fromId, toId, departureDate);
+  handleSearch = async (from, to, serviceClass, departure) => {
+    const { data: flights } = await getFlights(
+      from,
+      to,
+      serviceClass,
+      departure
+    );
+    const { data } = await getAirplanes(from, to, serviceClass, departure);
     const airplanes = ["All Airplanes", ...data];
 
-    this.setState({ flights, airplanes, serviceClass, search: true });
+    this.setState({ flights, airplanes, search: true });
   };
 
   handlePageChange = (page) => {
@@ -33,15 +43,17 @@ class Flights extends Component {
     this.setState({ selectedAirplane: airplane, currentPage: 1 });
   };
 
-  render() {
+  handleSort = (sortColumn) => {
+    this.setState({ sortColumn });
+  };
+
+  getPagedData = () => {
     const {
-      search,
       flights: allFlights,
-      airplanes,
-      serviceClass,
       currentPage,
       pageSize,
       selectedAirplane,
+      sortColumn,
     } = this.state;
 
     const filteredFlights =
@@ -49,10 +61,32 @@ class Flights extends Component {
         ? allFlights.filter((f) => f.airplane.name === selectedAirplane)
         : allFlights;
 
-    const flights = paginate(filteredFlights, currentPage, pageSize);
+    const sortedFlights = _.orderBy(
+      filteredFlights,
+      [sortColumn.path],
+      [sortColumn.order]
+    );
+
+    const flights = paginate(sortedFlights, currentPage, pageSize);
+
+    return { flightsCount: sortedFlights.length, flights };
+  };
+
+  render() {
+    const {
+      search,
+      airplanes,
+      currentPage,
+      pageSize,
+      selectedAirplane,
+      sortColumn,
+    } = this.state;
+
+    const { flightsCount, flights } = this.getPagedData();
 
     return (
       <React.Fragment>
+        <ToastContainer />
         <h1>Flights</h1>
         <FlightForm doSearch={this.handleSearch} />
         {search && (
@@ -69,12 +103,13 @@ class Flights extends Component {
             </div>
             <div className="col">
               <FlightTable
-                flightsCount={filteredFlights.length}
+                flightsCount={flightsCount}
                 flights={flights}
-                serviceClass={serviceClass}
+                sortColumn={sortColumn}
+                onSort={this.handleSort}
               />
               <Pagination
-                itemsCount={filteredFlights.length}
+                itemsCount={flightsCount}
                 pageSize={pageSize}
                 currentPage={currentPage}
                 onPageChange={this.handlePageChange}
