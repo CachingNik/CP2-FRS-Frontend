@@ -1,13 +1,16 @@
 import http from "./httpService";
+import { apiUrl } from "../config.json";
 
-export function getFlights(fromId, toId, serviceClassId, departure) {
+const apiEndpoint = apiUrl + "/packages";
+
+export function getFlights({ fromId, toId, serviceClassId, departure }) {
   return http.get(
-    `http://192.168.1.3:3000/api/packages/${fromId}/${toId}/${serviceClassId}/${departure}`
+    `${apiEndpoint}/${fromId}/${toId}/${serviceClassId}/${departure}`
   );
 }
 
-export function getAirplanes(fromId, toId, serviceClassId, departure) {
+export function getAirplanes({ fromId, toId, serviceClassId, departure }) {
   return http.get(
-    `http://192.168.1.3:3000/api/packages/airplanes-name/${fromId}/${toId}/${serviceClassId}/${departure}`
+    `${apiEndpoint}/airplanes-name/${fromId}/${toId}/${serviceClassId}/${departure}`
   );
 }

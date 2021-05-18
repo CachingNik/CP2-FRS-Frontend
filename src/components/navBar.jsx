@@ -42,7 +42,9 @@ const NavBar = ({ user }) => {
               <React.Fragment>
                 <NavLink className="nav-link" to="/profile">
                   <i
-                    class={`fa fa-user${user.isAdmin ? "-secret" : ""} me-1`}
+                    className={`fa fa-user${
+                      user.isAdmin ? "-secret" : ""
+                    } me-1`}
                     aria-hidden="true"
                   ></i>
                   {user.name}

@@ -1,9 +1,10 @@
 import http from "./httpService";
+import { apiUrl } from "../config.json";
 
 export function getAirports() {
-  return http.get("http://192.168.1.3:3000/api/airports");
+  return http.get(apiUrl + "/airports");
 }
 
 export function getServiceClasses() {
-  return http.get("http://192.168.1.3:3000/api/serviceClasses");
+  return http.get(apiUrl + "/serviceClasses");
 }

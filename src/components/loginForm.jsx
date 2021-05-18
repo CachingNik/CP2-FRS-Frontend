@@ -1,6 +1,7 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import Joi from "joi-browser";
+import { toast } from "react-toastify";
 import Form from "./common/form";
 import auth from "../services/authService";
 
@@ -24,9 +25,7 @@ class LoginForm extends Form {
       window.location = state ? state.from.pathname : "/flights";
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
-        const errors = { ...this.state.errors };
-        errors.username = ex.response.data;
-        this.setState({ errors });
+        toast.error(ex.response.data);
       }
     }
   };
@@ -36,7 +35,9 @@ class LoginForm extends Form {
 
     return (
       <div>
-        <h1>Login</h1>
+        <h3>
+          <span className="badge bg-dark">Authenticate Here...</span>
+        </h3>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("username", "Username")}
           {this.renderInput("password", "Password", "password")}

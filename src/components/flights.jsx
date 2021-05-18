@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import _ from "lodash";
-import { paginate } from "../utils/paginate";
-import FlightForm from "./flightForm";
 import FlightTable from "./flightTable";
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup";
 import { getAirplanes, getFlights } from "../services/packageService";
+import { paginate } from "../utils/paginate";
 
 class Flights extends Component {
   state = {
-    search: false,
     flights: [],
     airplanes: [],
     pageSize: 5,
@@ -21,18 +19,15 @@ class Flights extends Component {
     },
   };
 
-  handleSearch = async (from, to, serviceClass, departure) => {
-    const { data: flights } = await getFlights(
-      from,
-      to,
-      serviceClass,
-      departure
-    );
-    const { data } = await getAirplanes(from, to, serviceClass, departure);
+  async componentDidMount() {
+    const { params: flightQuery } = this.props.match;
+
+    const { data: flights } = await getFlights(flightQuery);
+    const { data } = await getAirplanes(flightQuery);
     const airplanes = ["All Airplanes", ...data];
 
-    this.setState({ flights, airplanes, search: true });
-  };
+    this.setState({ flights, airplanes });
+  }
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
@@ -72,49 +67,39 @@ class Flights extends Component {
   };
 
   render() {
-    const {
-      search,
-      airplanes,
-      currentPage,
-      pageSize,
-      selectedAirplane,
-      sortColumn,
-    } = this.state;
+    const { airplanes, currentPage, pageSize, selectedAirplane, sortColumn } =
+      this.state;
 
     const { flightsCount, flights } = this.getPagedData();
 
     return (
       <React.Fragment>
-        <h1>Flights</h1>
-        <FlightForm doSearch={this.handleSearch} />
-        {search && (
-          <div className="row my-3">
-            <h3>
-              <span className="badge bg-dark">Search Results:</span>
-            </h3>
-            <div className="col col-md-3 col-xl-2">
-              <ListGroup
-                items={airplanes}
-                selectedItem={selectedAirplane}
-                onItemSelect={this.handleAirplaneSelect}
-              />
-            </div>
-            <div className="col">
-              <FlightTable
-                flightsCount={flightsCount}
-                flights={flights}
-                sortColumn={sortColumn}
-                onSort={this.handleSort}
-              />
-              <Pagination
-                itemsCount={flightsCount}
-                pageSize={pageSize}
-                currentPage={currentPage}
-                onPageChange={this.handlePageChange}
-              />
-            </div>
+        <h3>
+          <span className="badge bg-dark">Search Results:</span>
+        </h3>
+        <div className="row my-3">
+          <div className="col col-md-3 col-xl-2">
+            <ListGroup
+              items={airplanes}
+              selectedItem={selectedAirplane}
+              onItemSelect={this.handleAirplaneSelect}
+            />
           </div>
-        )}
+          <div className="col">
+            <FlightTable
+              flightsCount={flightsCount}
+              flights={flights}
+              sortColumn={sortColumn}
+              onSort={this.handleSort}
+            />
+            <Pagination
+              itemsCount={flightsCount}
+              pageSize={pageSize}
+              currentPage={currentPage}
+              onPageChange={this.handlePageChange}
+            />
+          </div>
+        </div>
       </React.Fragment>
     );
   }
