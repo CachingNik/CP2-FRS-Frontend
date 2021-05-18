@@ -77,7 +77,7 @@ class Flights extends Component {
         <h3>
           <span className="badge bg-dark">Search Results:</span>
         </h3>
-        <div className="row my-3">
+        <div className="row">
           <div className="col col-md-3 col-xl-2">
             <ListGroup
               items={airplanes}
