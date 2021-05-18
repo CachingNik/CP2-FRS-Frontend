@@ -6,7 +6,6 @@ This project is being developed using React library.
 ## Tasks Completed
 
 1. Routing
-2. Login & Register Pages with error checking
-3. Flight Search Form Implemented
-4. Flights / Packages list (Table)
-5. Authentication & Authorization
+2. Flight Search
+3. Flights / Packages list (Table)
+4. Authentication & Authorization
