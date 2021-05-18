@@ -9,3 +9,4 @@ This project is being developed using React library.
 2. Login & Register Pages with error checking
 3. Flight Search Form Implemented
 4. Flights / Packages list (Table)
+5. Authentication & Authorization

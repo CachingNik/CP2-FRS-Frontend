@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { ToastContainer } from "react-toastify";
 import _ from "lodash";
-import { getAirplanes, getFlights } from "../services/packageService";
 import { paginate } from "../utils/paginate";
 import FlightForm from "./flightForm";
 import FlightTable from "./flightTable";
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup";
+import { getAirplanes, getFlights } from "../services/packageService";
 
 class Flights extends Component {
   state = {
@@ -86,7 +85,6 @@ class Flights extends Component {
 
     return (
       <React.Fragment>
-        <ToastContainer />
         <h1>Flights</h1>
         <FlightForm doSearch={this.handleSearch} />
         {search && (

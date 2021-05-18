@@ -1,23 +1,34 @@
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import Home from "./components/home";
 import NavBar from "./components/navBar";
 import NotFound from "./components/notFound";
 import Flights from "./components/flights";
 import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
+import Logout from "./components/logout";
+import auth from "./services/authService";
 import "./App.css";
 
 class App extends Component {
+  state = {};
+
+  componentDidMount() {
+    this.setState({ user: auth.getCurrentUser() });
+  }
+
   render() {
     return (
       <React.Fragment>
-        <NavBar />
+        <ToastContainer />
+        <NavBar user={this.state.user} />
         <div className="container">
           <Switch>
             <Route path="/flights" component={Flights} />
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
+            <Route path="/logout" component={Logout} />
             <Route path="/not-found" component={NotFound} />
             <Route path="/" exact component={Home} />
             <Redirect to="/not-found" />
