@@ -6,7 +6,7 @@ const Table = ({ count, columns, sortColumn, onSort, data }) => {
   return (
     <div className="table-responsive">
       <table className="table table-hover">
-        <caption>{count} matching packages were found</caption>
+        <caption>{count} matching flights were found</caption>
         <TableHeader
           columns={columns}
           sortColumn={sortColumn}

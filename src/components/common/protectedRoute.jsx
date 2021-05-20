@@ -6,7 +6,7 @@ const ProtectedRoute = ({ component: Component, render, ...rest }) => {
   return (
     <Route
       render={(props) => {
-        if (!auth.getCurrentUser)
+        if (!auth.getCurrentUser())
           return (
             <Redirect
               to={{

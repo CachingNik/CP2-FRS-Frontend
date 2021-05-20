@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import AdminProtectedRoute from "./components/common/adminProtectedRoute";
 import Home from "./components/home";
 import NavBar from "./components/navBar";
 import NotFound from "./components/notFound";
@@ -8,6 +9,7 @@ import Flights from "./components/flights";
 import FlightSearch from "./components/flightSearch";
 import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
+import FlightForm from "./components/flightForm";
 import Logout from "./components/logout";
 import auth from "./services/authService";
 import "./App.css";
@@ -28,7 +30,13 @@ class App extends Component {
           <Switch>
             <Route
               path="/flights/:fromId/:toId/:serviceClassId/:departure"
+              exact
               component={Flights}
+            />
+            <AdminProtectedRoute
+              path="/flights/:id"
+              exact
+              component={FlightForm}
             />
             <Route path="/flights" exact component={FlightSearch} />
             <Route path="/login" component={LoginForm} />

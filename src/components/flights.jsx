@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import _ from "lodash";
+import { toast } from "react-toastify";
 import FlightTable from "./flightTable";
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup";
-import { getAirplanes, getFlights } from "../services/packageService";
+import packageService from "../services/packageService";
 import { paginate } from "../utils/paginate";
 
 class Flights extends Component {
@@ -19,15 +20,32 @@ class Flights extends Component {
     },
   };
 
-  async componentDidMount() {
-    const { params: flightQuery } = this.props.match;
+  componentDidMount() {
+    this.handleSearch(this.props.match.params);
+  }
 
-    const { data: flights } = await getFlights(flightQuery);
-    const { data } = await getAirplanes(flightQuery);
+  handleSearch = async (flightQuery) => {
+    const { data: flights } = await packageService.getFlights(flightQuery);
+    const { data } = await packageService.getAirplanes(flightQuery);
     const airplanes = ["All Airplanes", ...data];
 
     this.setState({ flights, airplanes });
-  }
+  };
+
+  handleDelete = async (flight) => {
+    const originalFlights = this.state.flights;
+    const flights = originalFlights.filter((f) => f._id !== flight._id);
+    this.setState({ flights });
+
+    try {
+      await packageService.deleteFlight(flight._id);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        toast.error(ex.response.data);
+
+      this.setState({ flights: originalFlights });
+    }
+  };
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
@@ -39,6 +57,10 @@ class Flights extends Component {
 
   handleSort = (sortColumn) => {
     this.setState({ sortColumn });
+  };
+
+  handleEdit = (flight) => {
+    this.props.history.push(`/flights/${flight._id}`);
   };
 
   getPagedData = () => {
@@ -78,7 +100,7 @@ class Flights extends Component {
           <span className="badge bg-dark">Search Results:</span>
         </h3>
         <div className="row">
-          <div className="col col-md-3 col-xl-2">
+          <div className="col col-md-2">
             <ListGroup
               items={airplanes}
               selectedItem={selectedAirplane}
@@ -91,6 +113,8 @@ class Flights extends Component {
               flights={flights}
               sortColumn={sortColumn}
               onSort={this.handleSort}
+              onDelete={this.handleDelete}
+              onEdit={this.handleEdit}
             />
             <Pagination
               itemsCount={flightsCount}

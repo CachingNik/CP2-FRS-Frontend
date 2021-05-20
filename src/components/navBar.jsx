@@ -1,8 +1,15 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
+import NavLinkDropdown from "./common/navLinkDropdown";
 import "bootstrap/js/src/collapse";
 
 const NavBar = ({ user }) => {
+  const dropdownAddItems = [
+    { label: "Flight", path: "/flights/new" },
+    { label: "Airline", path: "/airplanes/new" },
+    { label: "Airport", path: "/airports/new" },
+  ];
+
   return (
     <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -40,6 +47,11 @@ const NavBar = ({ user }) => {
             )}
             {user && (
               <React.Fragment>
+                {user.isAdmin && (
+                  <NavLinkDropdown label="Add" items={dropdownAddItems}>
+                    <i className="fa fa-plus me-1" aria-hidden="true"></i>
+                  </NavLinkDropdown>
+                )}
                 <NavLink className="nav-link" to="/profile">
                   <i
                     className={`fa fa-user${

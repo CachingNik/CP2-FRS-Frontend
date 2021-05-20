@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import moment from "moment";
 import Table from "./common/table";
 import TextWithBadge from "./common/textWithBadge";
+import auth from "../services/authService";
 
 class FlightTable extends Component {
   columns = [
@@ -14,19 +16,13 @@ class FlightTable extends Component {
       ),
     },
     {
-      label: "Departure Date",
-      content: (flight) => (
-        <React.Fragment>
-          <i className="fa fa-calendar me-1" aria-hidden="true"></i>
-          {this.dateExtractor(flight.departure)}
-        </React.Fragment>
-      ),
-    },
-    {
       path: "departure",
-      label: "Departure Time",
+      label: "Departure",
       content: (flight) => (
-        <TextWithBadge text={this.timeExtractor(flight.departure)} color="dark">
+        <TextWithBadge
+          text={moment(flight.departure).format("lll")}
+          color="dark"
+        >
           <i className="fa fa-map-marker me-1" aria-hidden="true"></i>
           {flight.from.abbrevation}
         </TextWithBadge>
@@ -34,9 +30,9 @@ class FlightTable extends Component {
     },
     {
       path: "arrival",
-      label: "Arrival Time",
+      label: "Arrival",
       content: (flight) => (
-        <TextWithBadge text={this.timeExtractor(flight.arrival)} color="dark">
+        <TextWithBadge text={moment(flight.arrival).format("lll")} color="dark">
           <i className="fa fa-map-marker me-1" aria-hidden="true"></i>
           {flight.to.abbrevation}
         </TextWithBadge>
@@ -46,14 +42,29 @@ class FlightTable extends Component {
     { content: () => <button className="btn btn-warning">Book</button> },
   ];
 
-  timeExtractor(value) {
-    const date = new Date(value);
-    return `${date.getHours()}:${("0" + date.getMinutes()).substr(-2)}`;
-  }
+  adminColumn = {
+    content: (flight) => (
+      <div className="input-group">
+        <button
+          className="btn btn-info"
+          onClick={() => this.props.onEdit(flight)}
+        >
+          <i className="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={() => this.props.onDelete(flight)}
+        >
+          <i className="fa fa-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+    ),
+  };
 
-  dateExtractor(value) {
-    const date = new Date(value);
-    return date.toString().split(" ").slice(0, 4).join(" ");
+  constructor() {
+    super();
+    const user = auth.getCurrentUser();
+    if (user && user.isAdmin) this.columns.push(this.adminColumn);
   }
 
   render() {

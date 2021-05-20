@@ -1,14 +1,14 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-import { getAirports, getServiceClasses } from "../services/otherService";
+import otherService from "../services/otherService";
 
 class FlightSearch extends Form {
   state = {
     data: {
-      from: "",
-      to: "",
-      serviceClass: "",
+      fromId: "",
+      toId: "",
+      serviceClassId: "",
       departure: "",
     },
     counter: {
@@ -22,24 +22,24 @@ class FlightSearch extends Form {
   };
 
   schema = {
+    fromId: Joi.string().required(),
+    toId: Joi.string().disallow(Joi.ref("fromId")).required(),
+    serviceClassId: Joi.string().required(),
     departure: Joi.date().required().label("Departure"),
-    from: Joi.string().required(),
-    to: Joi.string().disallow(Joi.ref("from")).required(),
-    serviceClass: Joi.string().required(),
   };
 
   async componentDidMount() {
-    const { data: airports } = await getAirports();
-    const { data: serviceClasses } = await getServiceClasses();
+    const { data: airports } = await otherService.getAirports();
+    const { data: serviceClasses } = await otherService.getServiceClasses();
 
     this.setState({ airports, serviceClasses });
   }
 
   doSubmit = () => {
-    const { from, to, serviceClass, departure } = this.state.data;
+    const { fromId, toId, serviceClassId, departure } = this.state.data;
 
     this.props.history.push(
-      `/flights/${from}/${to}/${serviceClass}/${departure}`
+      `/flights/${fromId}/${toId}/${serviceClassId}/${departure}`
     );
   };
 
@@ -56,9 +56,9 @@ class FlightSearch extends Form {
           <div className="card-body">
             <form onSubmit={this.handleSubmit}>
               <div className="input-group mb-3">
-                {this.renderDropdown("from", "From", airports)}
-                {this.renderDropdown("to", "To", airports)}
-                {this.renderDropdown("serviceClass", "Class", serviceClasses)}
+                {this.renderDropdown("fromId", "From", airports)}
+                {this.renderDropdown("toId", "To", airports)}
+                {this.renderDropdown("serviceClassId", "Class", serviceClasses)}
               </div>
               {this.renderInput("departure", "Departure", "date")}
               <div className="row justify-content-center">

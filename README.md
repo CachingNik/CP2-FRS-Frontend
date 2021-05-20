@@ -7,5 +7,6 @@ This project is being developed using React library.
 
 1. Routing
 2. Flight Search
-3. Flights / Packages list (Table)
+3. Flights list (Table)
 4. Authentication & Authorization
+5. Adding new Flights (Packages), Airports & Airlines details through admin

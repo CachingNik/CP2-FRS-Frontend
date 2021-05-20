@@ -1,5 +1,6 @@
 import { Component } from "react";
 import Joi from "joi-browser";
+import _ from "lodash";
 import Input from "./input";
 import Counter from "./counter";
 import Dropdown from "./dropdown";
@@ -17,7 +18,7 @@ class Form extends Component {
 
   validateProperty = ({ name, value }) => {
     const field = { [name]: value }; // Computed properties in ES6
-    const subschema = { [name]: this.schema[name] };
+    const subschema = { [name]: _.get(this.schema, name) };
     const { error } = Joi.validate(field, subschema);
     return error ? error.details[0].message : null;
   };
@@ -40,8 +41,8 @@ class Form extends Component {
     // dynamiclly accessing object property names
     else delete errors[input.name];
 
-    const data = { ...this.state.data };
-    data[input.name] = input.value;
+    let data = { ...this.state.data };
+    data = _.set(data, input.name, input.value);
     this.setState({ data, errors });
   };
 
@@ -81,16 +82,17 @@ class Form extends Component {
     );
   }
 
-  renderInput = (name, label, type = "text") => {
+  renderInput = (name, label, type = "text", secondaryLabel = "") => {
     const { data, errors } = this.state;
 
     return (
       <Input
         name={name}
         label={label}
+        secondaryLabel={secondaryLabel}
         type={type}
         onChange={this.handleChange}
-        value={data[name]}
+        value={_.get(data, name)}
         error={errors[name]}
       />
     );
