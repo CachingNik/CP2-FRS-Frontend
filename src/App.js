@@ -6,6 +6,7 @@ import NotFound from "./components/notFound";
 import Flights from "./components/flights";
 import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
+import FlightBookingForm from "./components/flightBookingForm";
 import "./App.css";
 
 class App extends Component {
@@ -18,6 +19,7 @@ class App extends Component {
             <Route path="/flights" component={Flights} />
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
+            <Route path="/bookingform" exact component={FlightBookingForm} />
             <Route path="/not-found" component={NotFound} />
             <Route path="/" exact component={Home} />
             <Redirect to="/not-found" />
