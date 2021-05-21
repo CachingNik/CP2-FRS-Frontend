@@ -18,7 +18,6 @@ class FlightForm extends Form {
       price: {
         adult: 0,
         child: 0,
-        infant: 0,
       },
       seatsLeft: 50,
     },
@@ -39,7 +38,6 @@ class FlightForm extends Form {
     price: {
       adult: Joi.number().min(0).required().label("Adult Price"),
       child: Joi.number().min(0).required().label("Child Price"),
-      infant: Joi.number().min(0).required().label("Infant Price"),
     },
     seatsLeft: Joi.number().min(50).max(1000).required().label("Seats"),
   };
@@ -83,7 +81,6 @@ class FlightForm extends Form {
       price: {
         adult: flight.price.adult,
         child: flight.price.child,
-        infant: flight.price.infant,
       },
       seatsLeft: flight.seatsLeft,
     };
@@ -130,7 +127,6 @@ class FlightForm extends Form {
           </label>
           {this.renderInput("price.adult", "Adult", "number", "₹")}
           {this.renderInput("price.child", "Child", "number", "₹")}
-          {this.renderInput("price.infant", "Infant", "number", "₹")}
           {this.renderSubmitButton("Save")}
         </form>
       </React.Fragment>

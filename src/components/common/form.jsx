@@ -17,6 +17,8 @@ class Form extends Component {
   };
 
   validateProperty = ({ name, value }) => {
+    if (name.match(/\]./)) return null;
+
     const field = { [name]: value }; // Computed properties in ES6
     const subschema = { [name]: _.get(this.schema, name) };
     const { error } = Joi.validate(field, subschema);
@@ -41,8 +43,7 @@ class Form extends Component {
     // dynamiclly accessing object property names
     else delete errors[input.name];
 
-    let data = { ...this.state.data };
-    data = _.set(data, input.name, input.value);
+    const data = _.set(this.state.data, input.name, input.value);
     this.setState({ data, errors });
   };
 

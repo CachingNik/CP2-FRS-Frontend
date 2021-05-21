@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import NavLinkDropdown from "./common/navLinkDropdown";
-import "bootstrap/js/src/collapse";
 
 const NavBar = ({ user }) => {
   const dropdownAddItems = [

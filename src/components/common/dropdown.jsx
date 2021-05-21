@@ -10,7 +10,7 @@ const Dropdown = ({
 }) => {
   return (
     <select className="form-select" {...rest}>
-      <option value="" disabled>
+      <option value="" style={{ color: "grey" }}>
         {label}
       </option>
       {items.map((item) => (

@@ -59,6 +59,12 @@ class Flights extends Component {
     this.setState({ sortColumn });
   };
 
+  handleViewBookPage = (flight) => {
+    const { adult, child } = this.props.match.params;
+
+    this.props.history.push(`/flights/${flight._id}/${adult}-${child}/book`);
+  };
+
   handleEdit = (flight) => {
     this.props.history.push(`/flights/${flight._id}`);
   };
@@ -113,6 +119,7 @@ class Flights extends Component {
               flights={flights}
               sortColumn={sortColumn}
               onSort={this.handleSort}
+              viewBookPage={this.handleViewBookPage}
               onDelete={this.handleDelete}
               onEdit={this.handleEdit}
             />

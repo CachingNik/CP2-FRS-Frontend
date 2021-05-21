@@ -39,7 +39,16 @@ class FlightTable extends Component {
       ),
     },
     { path: "seatsLeft", label: "Seats Left" },
-    { content: () => <button className="btn btn-warning">Book</button> },
+    {
+      content: (flight) => (
+        <button
+          className="btn btn-warning"
+          onClick={() => this.props.viewBookPage(flight)}
+        >
+          Book
+        </button>
+      ),
+    },
   ];
 
   adminColumn = {

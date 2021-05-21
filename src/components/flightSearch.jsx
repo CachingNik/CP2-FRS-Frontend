@@ -14,7 +14,6 @@ class FlightSearch extends Form {
     counter: {
       adult: 1,
       child: 0,
-      infant: 0,
     },
     errors: {},
     airports: [],
@@ -37,9 +36,10 @@ class FlightSearch extends Form {
 
   doSubmit = () => {
     const { fromId, toId, serviceClassId, departure } = this.state.data;
+    const { adult, child } = this.state.counter;
 
     this.props.history.push(
-      `/flights/${fromId}/${toId}/${serviceClassId}/${departure}`
+      `/flights/${fromId}/${toId}/${serviceClassId}/${departure}/${adult}-${child}`
     );
   };
 
@@ -64,7 +64,6 @@ class FlightSearch extends Form {
               <div className="row justify-content-center">
                 {this.renderCounter("adult", "Adults", 1)}
                 {this.renderCounter("child", "Children", 0, 3)}
-                {this.renderCounter("infant", "Infants", 0, 2)}
               </div>
               {this.renderSubmitButton("Search")}
             </form>
