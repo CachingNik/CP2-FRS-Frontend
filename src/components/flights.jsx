@@ -15,7 +15,7 @@ class Flights extends Component {
     currentPage: 1,
     selectedAirplane: "All Airplanes",
     sortColumn: {
-      path: "airplane.name",
+      path: "departure",
       order: "asc",
     },
   };

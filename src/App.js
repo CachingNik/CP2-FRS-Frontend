@@ -12,6 +12,7 @@ import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
 import FlightForm from "./components/flightForm";
 import BookForm from "./components/bookForm";
+import UserProfileForm from "./components/userProfileForm";
 import Logout from "./components/logout";
 import auth from "./services/authService";
 import "./App.css";
@@ -46,6 +47,7 @@ class App extends Component {
               component={FlightForm}
             />
             <Route path="/flights" exact component={FlightSearch} />
+            <ProtectedRoute path="/profile" component={UserProfileForm} />
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
             <Route path="/logout" component={Logout} />

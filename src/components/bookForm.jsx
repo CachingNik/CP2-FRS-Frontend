@@ -4,12 +4,13 @@ import Form from "./common/form";
 import AboutFlight from "./AboutFlight";
 import Accordion from "./common/accordion";
 import packageService from "../services/packageService";
+import auth from "../services/authService";
 
 class BookForm extends Form {
   state = {
     data: {
-      email: "",
-      mobileNumber: "",
+      email: auth.getCurrentUser().email,
+      mobileNumber: auth.getCurrentUser().mobileNumber,
       adultList: [],
       childList: [],
     },
@@ -61,7 +62,7 @@ class BookForm extends Form {
       header: `Adult ${index + 1}`,
       body: (
         <div className="row row-cols-md-auto g-3 justify-content-center">
-          <div className="col-12">
+          <div className="col-12 mb-3">
             {this.renderDropdown(
               `adultList[${index}].gender`,
               "Gender",
@@ -81,7 +82,7 @@ class BookForm extends Form {
       header: `Child ${index + 1}`,
       body: (
         <div className="row row-cols-md-auto g-3 justify-content-center">
-          <div className="col-12">
+          <div className="col-12 mb-3">
             {this.renderDropdown(
               `childList[${index}].gender`,
               "Gender",
