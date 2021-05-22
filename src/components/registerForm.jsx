@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import Joi from "joi-browser";
 import { toast } from "react-toastify";
 import Form from "./common/form";
-import { register } from "../services/userService";
+import userService from "../services/userService";
 import auth from "../services/authService";
 
 class RegisterForm extends Form {
@@ -20,7 +20,7 @@ class RegisterForm extends Form {
 
   doSubmit = async () => {
     try {
-      const response = await register(this.state.data);
+      const response = await userService.register(this.state.data);
       auth.loginWithJwt(response.headers["x-auth-token"]);
       window.location = "/flights";
     } catch (ex) {

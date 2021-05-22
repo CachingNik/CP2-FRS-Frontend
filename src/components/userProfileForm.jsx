@@ -1,7 +1,9 @@
 import React from "react";
 import Joi from "joi-browser";
+import { toast } from "react-toastify";
 import Form from "./common/form";
 import auth from "../services/authService";
+import userService from "../services/userService";
 
 class UserProfileForm extends Form {
   state = {
@@ -16,7 +18,7 @@ class UserProfileForm extends Form {
   schema = {
     name: Joi.string().required().label("Name"),
     username: Joi.string().email().required().label("Username"),
-    mobileNumber: Joi.number().allow("").label("Mobile Number"),
+    mobileNumber: Joi.number().required().label("Mobile Number"),
   };
 
   componentDidMount() {
@@ -30,9 +32,16 @@ class UserProfileForm extends Form {
     this.setState({ data });
   }
 
-  doSubmit = () => {
-    // Call to Server
-    console.log("Submitted");
+  doSubmit = async () => {
+    try {
+      const { data: token } = await userService.update(this.state.data);
+      auth.loginWithJwt(token);
+
+      window.location = "/profile";
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400)
+        toast.error(ex.response.data);
+    }
   };
 
   render() {

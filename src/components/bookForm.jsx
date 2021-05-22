@@ -3,14 +3,16 @@ import Joi from "joi-browser";
 import Form from "./common/form";
 import AboutFlight from "./AboutFlight";
 import Accordion from "./common/accordion";
-import packageService from "../services/packageService";
 import auth from "../services/authService";
+import packageService from "../services/packageService";
 
 class BookForm extends Form {
   state = {
     data: {
       email: auth.getCurrentUser().email,
-      mobileNumber: auth.getCurrentUser().mobileNumber,
+      mobileNumber: auth.getCurrentUser().mobileNumber
+        ? auth.getCurrentUser().mobileNumber
+        : "",
       adultList: [],
       childList: [],
     },
