@@ -1,25 +1,56 @@
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import AdminProtectedRoute from "./components/common/adminProtectedRoute";
+import ProtectedRoute from "./components/common/protectedRoute";
 import Home from "./components/home";
 import NavBar from "./components/navBar";
 import NotFound from "./components/notFound";
 import Flights from "./components/flights";
+import FlightSearch from "./components/flightSearch";
 import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
-import FlightBookingForm from "./components/flightBookingForm";
+import FlightForm from "./components/flightForm";
+import BookForm from "./components/bookForm";
+import UserProfileForm from "./components/userProfileForm";
+import Logout from "./components/logout";
+import auth from "./services/authService";
 import "./App.css";
 
 class App extends Component {
+  state = {};
+
+  componentDidMount() {
+    this.setState({ user: auth.getCurrentUser() });
+  }
+
   render() {
     return (
       <React.Fragment>
-        <NavBar />
-        <div className="container">
+        <ToastContainer />
+        <NavBar user={this.state.user} />
+        <div className="container mt-2">
           <Switch>
-            <Route path="/flights" component={Flights} />
+            <Route
+              path="/flights/:fromId/:toId/:serviceClassId/:departure/:adult-:child"
+              exact
+              component={Flights}
+            />
+            <ProtectedRoute
+              path="/flights/:id/:adult-:child/book"
+              exact
+              component={BookForm}
+            />
+            <AdminProtectedRoute
+              path="/flights/:id"
+              exact
+              component={FlightForm}
+            />
+            <Route path="/flights" exact component={FlightSearch} />
+            <ProtectedRoute path="/profile" component={UserProfileForm} />
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
-            <Route path="/bookingform" exact component={FlightBookingForm} />
+            <Route path="/logout" component={Logout} />
             <Route path="/not-found" component={NotFound} />
             <Route path="/" exact component={Home} />
             <Redirect to="/not-found" />

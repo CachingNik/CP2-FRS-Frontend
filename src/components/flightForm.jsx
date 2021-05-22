@@ -1,69 +1,135 @@
 import React from "react";
 import Joi from "joi-browser";
+import moment from "moment";
+import { toast } from "react-toastify";
 import Form from "./common/form";
-import { getAirports, getServiceClasses } from "../services/otherService";
+import otherService from "../services/otherService";
+import packageService from "../services/packageService";
 
 class FlightForm extends Form {
   state = {
     data: {
-      from: "",
-      to: "",
-      serviceClass: "",
+      airplaneId: "",
+      fromId: "",
+      toId: "",
+      serviceClassId: "",
       departure: "",
-    },
-    counter: {
-      adult: 1,
-      child: 0,
-      infant: 0,
+      arrival: "",
+      price: {
+        adult: 0,
+        child: 0,
+      },
+      seatsLeft: 50,
     },
     errors: {},
+    airplanes: [],
     airports: [],
     serviceClasses: [],
   };
 
   schema = {
+    _id: Joi.string(),
+    airplaneId: Joi.string().required().label("Airline"),
+    fromId: Joi.string().required().label("From"),
+    toId: Joi.string().disallow(Joi.ref("fromId")).required().label("To"),
+    serviceClassId: Joi.string().required().label("Class"),
     departure: Joi.date().required().label("Departure"),
-    from: Joi.string().required(),
-    to: Joi.string().disallow(Joi.ref("from")).required(),
-    serviceClass: Joi.string().required(),
+    arrival: Joi.date().required().label("Arrival"),
+    price: {
+      adult: Joi.number().min(0).required().label("Adult Price"),
+      child: Joi.number().min(0).required().label("Child Price"),
+    },
+    seatsLeft: Joi.number().min(50).max(1000).required().label("Seats"),
   };
 
   async componentDidMount() {
-    const { data: airports } = await getAirports();
-    const { data: serviceClasses } = await getServiceClasses();
-
-    this.setState({ airports, serviceClasses });
+    await this.populateDropdowns();
+    await this.populateFlight();
   }
 
-  doSubmit = () => {
-    const { from, to, serviceClass, departure } = this.state.data;
+  async populateDropdowns() {
+    const { data: airplanes } = await otherService.getAirplanes();
+    const { data: airports } = await otherService.getAirports();
+    const { data: serviceClasses } = await otherService.getServiceClasses();
 
-    this.props.doSearch(from, to, serviceClass, departure);
+    this.setState({ airplanes, airports, serviceClasses });
+  }
+
+  async populateFlight() {
+    try {
+      const flightId = this.props.match.params.id;
+      if (flightId === "new") return;
+
+      const { data: flight } = await packageService.getFlight(flightId);
+
+      this.setState({ data: this.mapToViewModel(flight) });
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        this.props.history.replace("/not-found");
+    }
+  }
+
+  mapToViewModel(flight) {
+    return {
+      _id: flight._id,
+      airplaneId: flight.airplane._id,
+      fromId: flight.from._id,
+      toId: flight.to._id,
+      serviceClassId: flight.serviceClass._id,
+      departure: moment(flight.departure).format("YYYY-MM-DDTHH:mm"),
+      arrival: moment(flight.arrival).format("YYYY-MM-DDTHH:mm"),
+      price: {
+        adult: flight.price.adult,
+        child: flight.price.child,
+      },
+      seatsLeft: flight.seatsLeft,
+    };
+  }
+
+  doSubmit = async () => {
+    try {
+      await packageService.saveFlight(this.state.data);
+
+      this.props.history.goBack();
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        toast.error(ex.response.data);
+      }
+    }
   };
 
   render() {
-    const { airports, serviceClasses } = this.state;
+    const { airplanes, airports, serviceClasses } = this.state;
 
     return (
-      <div className="card">
-        <h5 className="card-header">Book your seats now!</h5>
-        <div className="card-body">
-          <form onSubmit={this.handleSubmit}>
-            <div className="input-group mb-3">
-              {this.renderDropdown("from", "From", airports)}
-              {this.renderDropdown("to", "To", airports)}
-              {this.renderDropdown("serviceClass", "Class", serviceClasses)}
-            </div>
-            {this.renderInput("departure", "Departure", "date")}
-            <div className="row justify-content-center">
-              {this.renderCounter("adult", "Adults", 1)}
-              {this.renderCounter("child", "Children", 0, 3)}
-              {this.renderCounter("infant", "Infants", 0, 2)}
-            </div>
-            {this.renderSubmitButton("Search")}
-          </form>
-        </div>
-      </div>
+      <React.Fragment>
+        <h3>
+          <span className="badge bg-dark">Flight Form</span>
+        </h3>
+        <form className="mb-3" onSubmit={this.handleSubmit}>
+          <div className="mb-3">
+            {this.renderDropdown("airplaneId", "Airline", airplanes)}
+          </div>
+          <div className="input-group mb-3">
+            {this.renderDropdown("fromId", "From", airports)}
+            {this.renderDropdown("toId", "To", airports)}
+            {this.renderDropdown("serviceClassId", "Class", serviceClasses)}
+          </div>
+          {this.renderInput(
+            "seatsLeft",
+            "No of Seats currently available",
+            "number"
+          )}
+          {this.renderInput("departure", "Departure", "datetime-local")}
+          {this.renderInput("arrival", "Arrival", "datetime-local")}
+          <label className="form-label">
+            <span className="badge bg-secondary">Ticket Price</span>
+          </label>
+          {this.renderInput("price.adult", "Adult", "number", "₹")}
+          {this.renderInput("price.child", "Child", "number", "₹")}
+          {this.renderSubmitButton("Save")}
+        </form>
+      </React.Fragment>
     );
   }
 }

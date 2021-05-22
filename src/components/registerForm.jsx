@@ -1,6 +1,10 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import Joi from "joi-browser";
+import { toast } from "react-toastify";
 import Form from "./common/form";
+import { register } from "../services/userService";
+import auth from "../services/authService";
 
 class RegisterForm extends Form {
   state = {
@@ -14,15 +18,28 @@ class RegisterForm extends Form {
     name: Joi.string().required().label("Name"),
   };
 
-  doSubmit = () => {
-    // Call the Server
-    console.log("Submitted");
+  doSubmit = async () => {
+    try {
+      const response = await register(this.state.data);
+      auth.loginWithJwt(response.headers["x-auth-token"]);
+      window.location = "/flights";
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        toast.error(ex.response.data);
+      }
+    }
   };
 
   render() {
+    if (auth.getCurrentUser()) return <Redirect to="/" />;
+
     return (
       <div>
-        <h1>Register</h1>
+        <h3>
+          <span className="badge bg-dark">
+            Register to access our services!
+          </span>
+        </h3>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("username", "Username")}
           {this.renderInput("password", "Password", "password")}

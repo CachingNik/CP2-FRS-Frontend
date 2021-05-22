@@ -1,38 +1,50 @@
 import React, { Component } from "react";
-import { ToastContainer } from "react-toastify";
 import _ from "lodash";
-import { getAirplanes, getFlights } from "../services/packageService";
-import { paginate } from "../utils/paginate";
-import FlightForm from "./flightForm";
+import { toast } from "react-toastify";
 import FlightTable from "./flightTable";
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup";
+import packageService from "../services/packageService";
+import { paginate } from "../utils/paginate";
 
 class Flights extends Component {
   state = {
-    search: false,
     flights: [],
     airplanes: [],
     pageSize: 5,
     currentPage: 1,
     selectedAirplane: "All Airplanes",
     sortColumn: {
-      path: "airplane.name",
+      path: "departure",
       order: "asc",
     },
   };
 
-  handleSearch = async (from, to, serviceClass, departure) => {
-    const { data: flights } = await getFlights(
-      from,
-      to,
-      serviceClass,
-      departure
-    );
-    const { data } = await getAirplanes(from, to, serviceClass, departure);
+  componentDidMount() {
+    this.handleSearch(this.props.match.params);
+  }
+
+  handleSearch = async (flightQuery) => {
+    const { data: flights } = await packageService.getFlights(flightQuery);
+    const { data } = await packageService.getAirplanes(flightQuery);
     const airplanes = ["All Airplanes", ...data];
 
-    this.setState({ flights, airplanes, search: true });
+    this.setState({ flights, airplanes });
+  };
+
+  handleDelete = async (flight) => {
+    const originalFlights = this.state.flights;
+    const flights = originalFlights.filter((f) => f._id !== flight._id);
+    this.setState({ flights });
+
+    try {
+      await packageService.deleteFlight(flight._id);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        toast.error(ex.response.data);
+
+      this.setState({ flights: originalFlights });
+    }
   };
 
   handlePageChange = (page) => {
@@ -45,6 +57,16 @@ class Flights extends Component {
 
   handleSort = (sortColumn) => {
     this.setState({ sortColumn });
+  };
+
+  handleViewBookPage = (flight) => {
+    const { adult, child } = this.props.match.params;
+
+    this.props.history.push(`/flights/${flight._id}/${adult}-${child}/book`);
+  };
+
+  handleEdit = (flight) => {
+    this.props.history.push(`/flights/${flight._id}`);
   };
 
   getPagedData = () => {
@@ -73,50 +95,42 @@ class Flights extends Component {
   };
 
   render() {
-    const {
-      search,
-      airplanes,
-      currentPage,
-      pageSize,
-      selectedAirplane,
-      sortColumn,
-    } = this.state;
+    const { airplanes, currentPage, pageSize, selectedAirplane, sortColumn } =
+      this.state;
 
     const { flightsCount, flights } = this.getPagedData();
 
     return (
       <React.Fragment>
-        <ToastContainer />
-        <h1>Flights</h1>
-        <FlightForm doSearch={this.handleSearch} />
-        {search && (
-          <div className="row my-3">
-            <h3>
-              <span className="badge bg-dark">Search Results:</span>
-            </h3>
-            <div className="col col-md-3 col-xl-2">
-              <ListGroup
-                items={airplanes}
-                selectedItem={selectedAirplane}
-                onItemSelect={this.handleAirplaneSelect}
-              />
-            </div>
-            <div className="col">
-              <FlightTable
-                flightsCount={flightsCount}
-                flights={flights}
-                sortColumn={sortColumn}
-                onSort={this.handleSort}
-              />
-              <Pagination
-                itemsCount={flightsCount}
-                pageSize={pageSize}
-                currentPage={currentPage}
-                onPageChange={this.handlePageChange}
-              />
-            </div>
+        <h3>
+          <span className="badge bg-dark">Search Results:</span>
+        </h3>
+        <div className="row">
+          <div className="col col-md-2">
+            <ListGroup
+              items={airplanes}
+              selectedItem={selectedAirplane}
+              onItemSelect={this.handleAirplaneSelect}
+            />
           </div>
-        )}
+          <div className="col">
+            <FlightTable
+              flightsCount={flightsCount}
+              flights={flights}
+              sortColumn={sortColumn}
+              onSort={this.handleSort}
+              viewBookPage={this.handleViewBookPage}
+              onDelete={this.handleDelete}
+              onEdit={this.handleEdit}
+            />
+            <Pagination
+              itemsCount={flightsCount}
+              pageSize={pageSize}
+              currentPage={currentPage}
+              onPageChange={this.handlePageChange}
+            />
+          </div>
+        </div>
       </React.Fragment>
     );
   }
