@@ -115,14 +115,20 @@ class BookForm extends Form {
   };
 
   render() {
-    const { flight } = this.state;
+    const { flight, count } = this.state;
 
     return (
       <React.Fragment>
-        <h1>
+        <h3>
           <span className="badge bg-dark">Book!</span>
-        </h1>
-        {flight && <AboutFlight flight={flight} />}
+        </h3>
+        {flight && (
+          <AboutFlight
+            flight={flight}
+            adultCount={count.adult}
+            childCount={count.child}
+          />
+        )}
         <form className="mb-3" onSubmit={this.handleSubmit}>
           <div className="row row-cols-md-auto g-3 mb-3 justify-content-center">
             <div className="col-12">{this.renderInput("email", "Email")}</div>
