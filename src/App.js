@@ -11,6 +11,8 @@ import FlightSearch from "./components/flightSearch";
 import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
 import FlightForm from "./components/flightForm";
+import AirplaneForm from "./components/airplaneForm";
+import AirportForm from "./components/airportForm";
 import BookForm from "./components/bookForm";
 import UserProfileForm from "./components/userProfileForm";
 import Logout from "./components/logout";
@@ -47,6 +49,11 @@ class App extends Component {
               component={FlightForm}
             />
             <Route path="/flights" exact component={FlightSearch} />
+            <AdminProtectedRoute
+              path="/airplanes/new"
+              component={AirplaneForm}
+            />
+            <AdminProtectedRoute path="/airports/new" component={AirportForm} />
             <ProtectedRoute path="/profile" component={UserProfileForm} />
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />

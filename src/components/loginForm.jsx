@@ -34,7 +34,7 @@ class LoginForm extends Form {
     if (auth.getCurrentUser()) return <Redirect to="/" />;
 
     return (
-      <div>
+      <React.Fragment>
         <h3>
           <span className="badge bg-dark">Authenticate Here...</span>
         </h3>
@@ -43,7 +43,7 @@ class LoginForm extends Form {
           {this.renderInput("password", "Password", "password")}
           {this.renderSubmitButton("Login")}
         </form>
-      </div>
+      </React.Fragment>
     );
   }
 }

@@ -13,10 +13,20 @@ function getAirplanes() {
   return http.get(`${apiUrl}/airplanes`);
 }
 
+function saveAirport(airport) {
+  return http.post(`${apiUrl}/airports`, airport);
+}
+
+function saveAirplane(airplane) {
+  return http.post(`${apiUrl}/airplanes`, airplane);
+}
+
 const otherService = {
   getAirports,
   getServiceClasses,
   getAirplanes,
+  saveAirport,
+  saveAirplane,
 };
 
 export default otherService;

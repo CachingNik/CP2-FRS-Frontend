@@ -34,7 +34,7 @@ class RegisterForm extends Form {
     if (auth.getCurrentUser()) return <Redirect to="/" />;
 
     return (
-      <div>
+      <React.Fragment>
         <h3>
           <span className="badge bg-dark">
             Register to access our services!
@@ -46,7 +46,7 @@ class RegisterForm extends Form {
           {this.renderInput("name", "Name")}
           {this.renderSubmitButton("Register")}
         </form>
-      </div>
+      </React.Fragment>
     );
   }
 }

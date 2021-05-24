@@ -24,7 +24,7 @@ class FlightTable extends Component {
           color="dark"
         >
           <i className="fa fa-map-marker me-1" aria-hidden="true"></i>
-          {flight.from.abbrevation}
+          {flight.from.abbreviation}
         </TextWithBadge>
       ),
     },
@@ -34,7 +34,7 @@ class FlightTable extends Component {
       content: (flight) => (
         <TextWithBadge text={moment(flight.arrival).format("lll")} color="dark">
           <i className="fa fa-map-marker me-1" aria-hidden="true"></i>
-          {flight.to.abbrevation}
+          {flight.to.abbreviation}
         </TextWithBadge>
       ),
     },
