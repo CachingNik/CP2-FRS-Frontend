@@ -16,6 +16,7 @@ import AirportForm from "./components/airportForm";
 import BookForm from "./components/bookForm";
 import UserProfileForm from "./components/userProfileForm";
 import Logout from "./components/logout";
+import Footer from "./components/footer";
 import auth from "./services/authService";
 import "./App.css";
 
@@ -28,10 +29,10 @@ class App extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div className="d-flex flex-column h-100">
         <ToastContainer />
         <NavBar user={this.state.user} />
-        <div className="container mt-2">
+        <div className="container mt-3">
           <Switch>
             <Route
               path="/flights/:fromId/:toId/:serviceClassId/:departure/:adult-:child"
@@ -63,7 +64,8 @@ class App extends Component {
             <Redirect to="/not-found" />
           </Switch>
         </div>
-      </React.Fragment>
+        <Footer />
+      </div>
     );
   }
 }

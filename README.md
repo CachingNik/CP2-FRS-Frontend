@@ -5,10 +5,9 @@ This project is being developed using React library.
 
 ## Tasks Completed
 
-1. Routing
-2. Flight Search
-3. Flights list (Table)
-4. Authentication & Authorization
-5. Adding new Flights (Packages), Airports & Airlines details through admin
-6. Flight Booking Form (Backend connection pending...)
-7. User Profile Page
+1. Flight Search
+2. Flights list (Table)
+3. Authentication & Authorization
+4. Adding new Flights (Packages), Airports & Airlines details through admin
+5. Flight Booking Form (Backend connection pending...)
+6. User Profile Page

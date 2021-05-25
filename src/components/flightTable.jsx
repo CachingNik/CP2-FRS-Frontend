@@ -51,29 +51,33 @@ class FlightTable extends Component {
     },
   ];
 
-  adminColumn = {
+  editColumn = {
     content: (flight) => (
-      <div className="input-group">
-        <button
-          className="btn btn-info"
-          onClick={() => this.props.onEdit(flight)}
-        >
-          <i className="fa fa-pencil" aria-hidden="true"></i>
-        </button>
-        <button
-          className="btn btn-danger"
-          onClick={() => this.props.onDelete(flight)}
-        >
-          <i className="fa fa-trash" aria-hidden="true"></i>
-        </button>
-      </div>
+      <button
+        className="btn btn-info"
+        onClick={() => this.props.onEdit(flight)}
+      >
+        <i className="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+    ),
+  };
+
+  deleteColumn = {
+    content: (flight) => (
+      <button
+        className="btn btn-danger"
+        onClick={() => this.props.onDelete(flight)}
+      >
+        <i className="fa fa-trash" aria-hidden="true"></i>
+      </button>
     ),
   };
 
   constructor() {
     super();
     const user = auth.getCurrentUser();
-    if (user && user.isAdmin) this.columns.push(this.adminColumn);
+    if (user && user.isAdmin)
+      this.columns.unshift(this.editColumn, this.deleteColumn);
   }
 
   render() {
