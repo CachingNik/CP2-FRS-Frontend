@@ -39,7 +39,7 @@ class FlightForm extends Form {
       adult: Joi.number().min(0).required().label("Adult Price"),
       child: Joi.number().min(0).required().label("Child Price"),
     },
-    seatsLeft: Joi.number().min(50).max(1000).required().label("Seats"),
+    seatsLeft: Joi.number().min(0).max(1000).required().label("Seats"),
   };
 
   async componentDidMount() {
