@@ -12,7 +12,7 @@ export default async function openPaymentPortal(data, amount, history) {
   });
 
   var options = {
-    key: "Enter here your Razorpay KeyId",
+    key: "rzp_test_VEIyq7dhRVhICa",
     amount: order.amount,
     currency: order.currency,
     name: "Flight Reservation System",
