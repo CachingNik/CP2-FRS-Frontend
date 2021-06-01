@@ -1,10 +1,7 @@
 import React from "react";
 import moment from "moment";
 
-const AboutFlight = ({ flight, adultCount, childCount }) => {
-  const ticketFare =
-    flight.price.adult * adultCount + flight.price.child * childCount;
-
+const AboutFlight = ({ flight, adultCount, childCount, ticketFare }) => {
   return (
     <div className="row justify-content-center mb-3">
       <div className="col-lg-8">

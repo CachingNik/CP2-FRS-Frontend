@@ -4,10 +4,13 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import loggerInit from "./services/logService";
 import "bootstrap/js/src/collapse";
 import "bootstrap/js/src/dropdown";
 import "bootstrap/dist/css/bootstrap.css";
 import "react-toastify/dist/ReactToastify.css";
+
+loggerInit();
 
 ReactDOM.render(
   <React.StrictMode>

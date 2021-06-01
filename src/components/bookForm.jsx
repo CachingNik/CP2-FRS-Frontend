@@ -1,18 +1,20 @@
 import React from "react";
 import Joi from "joi-browser";
+import moment from "moment";
+import { toast } from "react-toastify";
 import Form from "./common/form";
 import AboutFlight from "./AboutFlight";
 import Accordion from "./common/accordion";
 import auth from "../services/authService";
 import packageService from "../services/packageService";
+import openPaymentPortal from "../services/paymentService";
 
 class BookForm extends Form {
   state = {
     data: {
-      email: auth.getCurrentUser().email,
-      mobileNumber: auth.getCurrentUser().mobileNumber
-        ? auth.getCurrentUser().mobileNumber
-        : "",
+      name: "",
+      email: "",
+      mobileNumber: "",
       adultList: [],
       childList: [],
     },
@@ -28,6 +30,7 @@ class BookForm extends Form {
   };
 
   schema = {
+    name: Joi.string().required(),
     email: Joi.string().email().label("Email"),
     mobileNumber: Joi.number().required().label("Mobile Number"),
     adultList: Joi.array()
@@ -43,7 +46,9 @@ class BookForm extends Form {
         gender: Joi.string().valid("male", "female").required(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
-        dateOfBirth: Joi.date().required(),
+        dateOfBirth: Joi.date()
+          .min(moment().subtract(11, "years").format("YYYY-MM-DD"))
+          .required(),
       })
       .min(this.state.count.child)
       .max(3),
@@ -51,12 +56,35 @@ class BookForm extends Form {
 
   async componentDidMount() {
     const { adult, child } = this.state.count;
-    if (adult > 4 || child > 3) this.props.history.replace("/not-found");
+    if (adult === 0 || adult > 4 || child > 3)
+      this.props.history.replace("/not-found");
 
+    await this.populateFlight();
+    await this.populateUser();
+  }
+
+  async populateFlight() {
     const flightId = this.props.match.params.id;
     const { data: flight } = await packageService.getFlight(flightId);
 
     this.setState({ flight });
+  }
+
+  async populateUser() {
+    const data = { ...this.state.data };
+    const user = auth.getCurrentUser();
+
+    data.name = user.name;
+    data.email = user.email;
+    data.mobileNumber = user.mobileNumber ? user.mobileNumber : "";
+
+    this.setState({ data });
+  }
+
+  getTicketFare() {
+    const { flight, count } = this.state;
+
+    return flight.price.adult * count.adult + flight.price.child * count.child;
   }
 
   passengerForms = [
@@ -109,9 +137,18 @@ class BookForm extends Form {
     })),
   ];
 
-  doSubmit = () => {
-    // Call to Server
-    console.log("Submitted");
+  doSubmit = async () => {
+    try {
+      const { data, flight } = this.state;
+
+      await openPaymentPortal(
+        { ...data, flightId: flight._id },
+        this.getTicketFare(),
+        this.props.history
+      );
+    } catch (ex) {
+      toast.error("Please try again later.");
+    }
   };
 
   render() {
@@ -127,6 +164,7 @@ class BookForm extends Form {
             flight={flight}
             adultCount={count.adult}
             childCount={count.child}
+            ticketFare={this.getTicketFare()}
           />
         )}
         <form className="mb-3" onSubmit={this.handleSubmit}>

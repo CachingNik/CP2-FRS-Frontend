@@ -1,7 +1,6 @@
 import http from "./httpService";
-import { apiUrl } from "../config.json";
 
-const apiEndpoint = apiUrl + "/packages";
+const apiEndpoint = "/packages";
 
 function getFlight(flightId) {
   return http.get(`${apiEndpoint}/${flightId}`);

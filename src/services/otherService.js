@@ -1,24 +1,23 @@
 import http from "./httpService";
-import { apiUrl } from "../config.json";
 
 function getAirports() {
-  return http.get(`${apiUrl}/airports`);
+  return http.get("/airports");
 }
 
 function getServiceClasses() {
-  return http.get(`${apiUrl}/serviceClasses`);
+  return http.get("/serviceClasses");
 }
 
 function getAirplanes() {
-  return http.get(`${apiUrl}/airplanes`);
+  return http.get("/airplanes");
 }
 
 function saveAirport(airport) {
-  return http.post(`${apiUrl}/airports`, airport);
+  return http.post("/airports", airport);
 }
 
 function saveAirplane(airplane) {
-  return http.post(`${apiUrl}/airplanes`, airplane);
+  return http.post("/airplanes", airplane);
 }
 
 const otherService = {
