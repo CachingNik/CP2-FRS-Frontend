@@ -12,5 +12,3 @@ This project is being developed using React library.
 5. Flight Booking Form
 6. User Profile Page
 7. Payment Service (Razorpay)
-
-_There are 2 fields Razorpay Key & Sentry dsn which have to be filled on your own._
