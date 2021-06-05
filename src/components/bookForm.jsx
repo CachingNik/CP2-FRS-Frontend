@@ -1,6 +1,5 @@
 import React from "react";
 import Joi from "joi-browser";
-import moment from "moment";
 import { toast } from "react-toastify";
 import Form from "./common/form";
 import AboutFlight from "./AboutFlight";
@@ -31,7 +30,7 @@ class BookForm extends Form {
 
   schema = {
     name: Joi.string().required(),
-    email: Joi.string().email().label("Email"),
+    email: Joi.string().email().required().label("Email"),
     mobileNumber: Joi.number().required().label("Mobile Number"),
     adultList: Joi.array()
       .items({
@@ -46,9 +45,7 @@ class BookForm extends Form {
         gender: Joi.string().valid("male", "female").required(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
-        dateOfBirth: Joi.date()
-          .min(moment().subtract(11, "years").format("YYYY-MM-DD"))
-          .required(),
+        dateOfBirth: Joi.date().required(),
       })
       .min(this.state.count.child)
       .max(3),
@@ -64,10 +61,15 @@ class BookForm extends Form {
   }
 
   async populateFlight() {
-    const flightId = this.props.match.params.id;
-    const { data: flight } = await packageService.getFlight(flightId);
+    try {
+      const flightId = this.props.match.params.id;
+      const { data: flight } = await packageService.getFlight(flightId);
 
-    this.setState({ flight });
+      this.setState({ flight });
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        this.props.history.replace("/not-found");
+    }
   }
 
   async populateUser() {
@@ -142,12 +144,17 @@ class BookForm extends Form {
       const { data, flight } = this.state;
 
       await openPaymentPortal(
-        { ...data, flightId: flight._id },
-        this.getTicketFare(),
+        { ...data, flightId: flight._id, amount: this.getTicketFare() },
         this.props.history
       );
     } catch (ex) {
-      toast.error("Please try again later.");
+      if (!ex) {
+        toast.error("Please try again later.");
+        return;
+      }
+
+      if (ex.response && ex.response.status === 400)
+        toast.error(ex.response.data);
     }
   };
 

@@ -4,15 +4,13 @@ import { loadScript } from "../utils/loadScript";
 
 const apiEndpoint = "/orders";
 
-export default async function openPaymentPortal(data, amount, history) {
+export default async function openPaymentPortal(data, history) {
+  const { data: order } = await http.post(`${apiEndpoint}/new`, data);
+
   await loadScript("https://checkout.razorpay.com/v1/checkout.js");
 
-  const { data: order } = await http.post(`${apiEndpoint}/new`, {
-    amount: amount,
-  });
-
   var options = {
-    key: "Enter here your Razorpay KeyId",
+    key: "rzp_test_VEIyq7dhRVhICa",
     amount: order.amount,
     currency: order.currency,
     name: "Flight Reservation System",
@@ -27,7 +25,7 @@ export default async function openPaymentPortal(data, amount, history) {
         });
 
         history.replace("/");
-        toast.success("Your tickets have been booked.");
+        toast.success("Your tickets have been booked and mailed to you.");
       } catch (ex) {
         if (ex.response && ex.response.status === 400)
           toast.error(ex.response.data);
@@ -42,7 +40,7 @@ export default async function openPaymentPortal(data, amount, history) {
       address: "FRS Office, unknown city",
     },
     theme: {
-      color: "#3399cc",
+      color: "#696969",
     },
   };
   const razorPay = new window.Razorpay(options);
